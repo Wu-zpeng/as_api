@@ -25,6 +25,7 @@ public class UserController {
             , @RequestParam(value = "imoocId") String imoocId
             , @RequestParam(value = "orderId") String orderId) {
         mUserService.addUser(userName, bCryptPasswordEncoder.encode(password), imoocId, orderId);
+        //测试描述
         return "registration success.";
     }
 }
