@@ -1,10 +1,13 @@
 package com.example.as.api.entity;
 
 import com.example.as.api.util.ResponseCode;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.HashMap;
 import java.util.Map;
 
+// 该注解当返回的json某字段为null的时候，不显示
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseEntity {
     private int code;
     private String message;
