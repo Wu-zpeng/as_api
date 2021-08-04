@@ -1,5 +1,6 @@
 package com.example.as.api.controller;
 
+import com.example.as.api.config.NeedLogin;
 import com.example.as.api.entity.ResponseEntity;
 import com.example.as.api.entity.UserEntity;
 import com.example.as.api.service.UserService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -69,5 +71,14 @@ public class UserController {
         mUserService.addUser(userName, bCryptPasswordEncoder.encode(password), imoocId, orderId);
         //测试描述
         return ResponseEntity.successMessage("registration success.");
+    }
+
+    @NeedLogin
+    @ApiOperation(value = "登出")
+    @RequestMapping(value = "/logout")
+    public ResponseEntity logout(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        UserRedisUtil.removeUser(redisTemplate, session);
+        return ResponseEntity.successMessage("logout success.");
     }
 }

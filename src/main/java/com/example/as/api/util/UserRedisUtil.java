@@ -36,7 +36,20 @@ public class UserRedisUtil {
     }
 
     /**
+     * 检查Redis中是否存在该用户
+     *
+     * @param redisTemplate
+     * @param request
+     * @return
+     */
+    public static boolean checkUser(StringRedisTemplate redisTemplate, HttpServletRequest request) {
+        String val = redisTemplate.opsForValue().get(getBoardingPass(request));
+        return val != null;
+    }
+
+    /**
      * 根据session id 获取 缓存在redis中的用户信息
+     *
      * @param redisTemplate
      * @param request
      * @return
@@ -68,6 +81,6 @@ public class UserRedisUtil {
      */
     public static String getBoardingPass(HttpServletRequest request) {
         String pass = request.getHeader(BOARDING_PASS);
-        return pass == null ? pass : "no-pass";
+        return pass != null ? pass : "no-pass";
     }
 }
