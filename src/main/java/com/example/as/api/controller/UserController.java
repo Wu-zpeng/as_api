@@ -4,8 +4,11 @@ import com.example.as.api.config.NeedLogin;
 import com.example.as.api.entity.ResponseEntity;
 import com.example.as.api.entity.UserEntity;
 import com.example.as.api.service.UserService;
+import com.example.as.api.util.DataUtil;
 import com.example.as.api.util.ResponseCode;
 import com.example.as.api.util.UserRedisUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -80,5 +83,16 @@ public class UserController {
         HttpSession session = request.getSession();
         UserRedisUtil.removeUser(redisTemplate, session);
         return ResponseEntity.successMessage("logout success.");
+    }
+
+    @ApiOperation(value = "获取用户列表")
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public ResponseEntity getUserList(@RequestParam(value = "pageIndex", defaultValue = "1") @ApiParam("起始页码从1开始") int pageIndex
+            , @RequestParam(value = "pageSize", defaultValue = "10") @ApiParam("每页显示的数量") int pageSize
+    ) {
+        PageHelper.startPage(pageIndex, pageSize);
+        List<UserEntity> list = mUserService.getUserList();
+        PageInfo<UserEntity> pageInfo = new PageInfo<>(list);
+        return ResponseEntity.success(DataUtil.getPageData(list));
     }
 }
