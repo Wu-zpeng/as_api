@@ -15,13 +15,11 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 /**
@@ -94,5 +92,13 @@ public class UserController {
         List<UserEntity> list = mUserService.getUserList();
         PageInfo<UserEntity> pageInfo = new PageInfo<>(list);
         return ResponseEntity.success(DataUtil.getPageData(list));
+    }
+
+    @ApiOperation(value = "用户管理")
+    @RequestMapping(value = "/{uid}", method = RequestMethod.PUT)
+    public ResponseEntity updateUser(@ApiParam(name = "用户ID") @PathVariable String uid,
+                                     @RequestParam(value = "forbid") @ApiParam(value = "是否禁止") String forbid) {
+        mUserService.updateUser(uid,forbid);
+        return ResponseEntity.successMessage("操作成功");
     }
 }
